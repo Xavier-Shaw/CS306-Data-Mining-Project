@@ -96,7 +96,7 @@ export default {
         getSourcePosition: (d) => d.start,
         getTargetPosition: (d) => d.end,
         getColor: d => this.theme.trailColor0,
-        getWidth: d => 5
+        getWidth: d => 1
       });
 
       let busDeckLayer = new MapboxLayer({
@@ -108,7 +108,7 @@ export default {
         getSourcePosition: (d) => d.start,
         getTargetPosition: (d) => d.end,
         getColor: d => this.theme.trailColor1,
-        getWidth: d => 5
+        getWidth: d => 1
       });
 
       // 站点层
@@ -130,8 +130,8 @@ export default {
         // 添加myDeckLayer图层
         // this.map.addLayer(myDeckLayer);
         // this.map.addLayer(stationLayer);
-        // this.map.addLayer(subwayDeckLayer);
-        this.map.addLayer(busDeckLayer);
+        this.map.addLayer(subwayDeckLayer);
+        // this.map.addLayer(busDeckLayer);
         // 每50ms更新一下时间，形成动画
         setInterval(() => {
           myDeckLayer.setProps({
