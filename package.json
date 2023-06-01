@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "deck.gl": "^8.9.15",
+    "deck.gl": "^8.9.17",
     "mapbox-gl": "^2.14.1",
     "vue": "^3.3.2"
   },

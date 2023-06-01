@@ -8,9 +8,12 @@ df['next_lng'] = df['lng'].shift(-1).where(df['names'] == df['names'].shift(-1))
 df['next_lat'] = df['lat'].shift(-1).where(df['names'] == df['names'].shift(-1))
 df
 
+
 def row_to_json(row):
-    data = {'start': row[['lng', 'lat']].values.tolist(), 'end': row[['next_lng', 'next_lat']].values.tolist(), 'name': row['names']}
+    data = {'start': row[['lng', 'lat']].values.tolist(), 'end': row[['next_lng', 'next_lat']].values.tolist(),
+            'name': row['names']}
     return json.dumps(data, cls=NpEncoder)
+
 
 # Define the output file path
 output_file = 'bus_path.json'

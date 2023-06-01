@@ -1,18 +1,16 @@
 <template>
-
   <div class="home">
     <div id="map" ref="map"></div> <!-- 地图 -->
-    <div id="info"></div>  <!--  坐标提示框 -->
+    <div id="info"></div> <!--  坐标提示框 -->
   </div>
 </template>
 
 <script>
 // import url('https://api.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css');
 import mapboxgl from "mapbox-gl";
-import {MapboxLayer} from "@deck.gl/mapbox";
-import {TripsLayer} from "@deck.gl/geo-layers";
-import {PolygonLayer} from "@deck.gl/layers";
-
+import { MapboxLayer } from "@deck.gl/mapbox";
+import { TripsLayer } from "@deck.gl/geo-layers";
+import { PolygonLayer, LineLayer } from "@deck.gl/layers";
 export default {
   name: "Home",
 
@@ -46,7 +44,7 @@ export default {
     // 初始化底层地图
     initMap() {
       this.map = new mapboxgl.Map({
-        accessToken: "自己在mapBox上申请的access token",
+        accessToken: "pk.eyJ1IjoibmVuZ25lbmcxMjIyIiwiYSI6ImNsaWRlN21hYjBucWUzb3A3amw2OXFrMTIifQ.DmUDV6J7BL73pNZV9r6bLw",
         container: this.$refs.map,
         style: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
         center: [114.098549, 22.573233], //深圳随便一个地方
@@ -78,7 +76,7 @@ export default {
         getPath: (d) => d.path,
         getTimestamps: (d) => d.timestamps, //返回一个时间戳数组，对应于返回的路径的每个导航点，表示访问该点的时间
         getColor: (d) =>
-            d.passenger === 0 ? this.theme.trailColor0 : this.theme.trailColor1,
+          d.passenger === 0 ? this.theme.trailColor0 : this.theme.trailColor1,
         opacity: 0.3,
         widthMinPixels: 5, // 轨迹的宽度
         capRounded: true,
@@ -86,6 +84,30 @@ export default {
         trailLength: 30, //路径完全淡出需要多长时间
         currentTime: 0, //帧的当前时间，即动画的播放头;此值应与 timestamps 中的时间戳单位相同
         shadowEnabled: false,
+      });
+      // 公交地铁线路
+      let subwayDeckLayer = new MapboxLayer({
+        // 使用linelayer
+        id: "line-layer",
+        type: LineLayer,
+        // data: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json",
+        data: "/subway_path.json",
+        getSourcePosition: (d) => d.start,
+        getTargetPosition: (d) => d.end,
+        getColor: d => d => [Math.sqrt(d.inbound + d.outbound), 140, 0],
+        getWidth: d => 50
+      });
+
+      let busDeckLayer = new MapboxLayer({
+        // 使用linelayer
+        id: "line-layer",
+        type: LineLayer,
+        // data: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json",
+        data: "/bus_path.json",
+        getSourcePosition: (d) => d.start,
+        getTargetPosition: (d) => d.end,
+        getColor: d => d => [Math.sqrt(d.inbound + d.outbound), 140, 0],
+        getWidth: d => 50
       });
 
       // 站点层
@@ -101,13 +123,13 @@ export default {
         getElevation: 100,
         getFillColor: this.theme.buildingColor,
         material: this.theme.material
-      })
+      });
 
       this.map.on("load", () => {
         // 添加myDeckLayer图层
-        this.map.addLayer(myDeckLayer);
-        this.map.addLayer(stationLayer);
-
+        // this.map.addLayer(myDeckLayer);
+        // this.map.addLayer(stationLayer);
+        this.map.addLayer(subwayDeckLayer);
         // 每50ms更新一下时间，形成动画
         setInterval(() => {
           myDeckLayer.setProps({
