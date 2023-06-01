@@ -49,6 +49,7 @@ export default {
         style: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
         center: [114.098549, 22.573233], //深圳随便一个地方
         // center: [-74, 40.72], //曼哈顿（样例的）
+        // center: [-122.271604, 37.803664],
         zoom: 13,
         pitch: 45,
         bearing: 0,
@@ -94,8 +95,8 @@ export default {
         data: "/subway_path.json",
         getSourcePosition: (d) => d.start,
         getTargetPosition: (d) => d.end,
-        getColor: d => d => [Math.sqrt(d.inbound + d.outbound), 140, 0],
-        getWidth: d => 50
+        getColor: d => this.theme.trailColor0,
+        getWidth: d => 5
       });
 
       let busDeckLayer = new MapboxLayer({
@@ -106,8 +107,8 @@ export default {
         data: "/bus_path.json",
         getSourcePosition: (d) => d.start,
         getTargetPosition: (d) => d.end,
-        getColor: d => d => [Math.sqrt(d.inbound + d.outbound), 140, 0],
-        getWidth: d => 50
+        getColor: d => this.theme.trailColor1,
+        getWidth: d => 5
       });
 
       // 站点层
@@ -129,7 +130,8 @@ export default {
         // 添加myDeckLayer图层
         // this.map.addLayer(myDeckLayer);
         // this.map.addLayer(stationLayer);
-        this.map.addLayer(subwayDeckLayer);
+        // this.map.addLayer(subwayDeckLayer);
+        this.map.addLayer(busDeckLayer);
         // 每50ms更新一下时间，形成动画
         setInterval(() => {
           myDeckLayer.setProps({
